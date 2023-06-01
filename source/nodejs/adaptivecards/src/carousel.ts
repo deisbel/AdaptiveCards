@@ -36,6 +36,7 @@ import {
 } from "swiper";
 import * as Utils from "./utils";
 import { GlobalSettings } from "./shared";
+import { ToggleVisibilityChoiceSetInput } from "./card-elements-ex";
 
 // Note: to function correctly, consumers need to have CSS from swiper/css, swiper/css/pagination, and
 // swiper/css/navigation
@@ -222,6 +223,7 @@ export class Carousel extends Container {
             "Input.Number",
             "Input.ChoiceSet",
             "Input.Toggle",
+            ToggleVisibilityChoiceSetInput.JsonTypeName,
             ...super.forbiddenChildElements()
         ];
     }

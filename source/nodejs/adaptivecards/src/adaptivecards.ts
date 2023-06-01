@@ -16,4 +16,6 @@ export * from "./channel-adapter";
 export * from "./activity-request";
 export * from "./adaptive-applet";
 
+export * from "./card-elements-ex";
+
 export { IAdaptiveCard, ICardElement } from "./schema";

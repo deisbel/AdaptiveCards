@@ -31,6 +31,30 @@ We use lerna to manage package linking and building.
 2. `npm start`
 3. OR to test preview features: `npm run start:preview`
 
+## Issues executing 'npm start'
+
+1- Error: error:0308010C:digital envelope routines::unsupported
+    at new Hash (node:internal/crypto/hash:67:19)
+    at Object.createHash (node:crypto:130:10)
+
+Solution: 
+    Execute 'npm audit fix --force'
+    https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
+
+
+## Issues executing 'npm run start:preview'
+
+1- [webpack-cli] Error: Unknown option '--open-page'
+  
+
+In package.json change this line: 
+webpack-dev-server --open-page previewFeatures.html
+by 
+webpack-dev-server --open /previewFeatures.html
+
+In previewFeatures.html add this line to its header
+<script src="adaptivecards-designer.js"></script>
+
 ## Start the documentation site (http://adaptivecards.io)
 
 1. `cd adaptivecards-site`

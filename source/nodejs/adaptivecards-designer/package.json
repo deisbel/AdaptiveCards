@@ -26,7 +26,7 @@
 		"build": "webpack",
 		"watch": "webpack --watch",
 		"start": "webpack-dev-server --open",
-		"start:preview": "webpack-dev-server --open-page previewFeatures.html",
+		"start:preview": "webpack-dev-server --open /previewFeatures.html",
 		"start:nohosts": "webpack-dev-server --open-page noHosts.html",
 		"dts": "dts-generator --prefix adaptivecards-designer --project . --out dist/adaptivecards-designer.d.ts",
 		"lint": "eslint src/**/*.ts",

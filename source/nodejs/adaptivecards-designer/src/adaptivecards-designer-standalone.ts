@@ -26,3 +26,4 @@ export * from "./catalogue";
 export * from "./containers/host-container";
 export * from "./containers/default/default-container";
 export * from "./pic2card";
+export * from "./designer-peers-ex";

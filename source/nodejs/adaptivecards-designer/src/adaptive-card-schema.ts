@@ -221,6 +221,9 @@ export const adaptiveCardSchema =
             },
             {
               "$ref": "#/definitions/Input.ChoiceSet"
+            },
+            {
+              "$ref": "#/definitions/Input.ToggleVisibilityChoiceSetInput"
             }
           ]
         }
@@ -568,6 +571,57 @@ export const adaptiveCardSchema =
       "required": [
         "id",
         "choices"
+      ]
+    },
+    "Input.ToggleVisibilityChoiceSetInput": {
+      "additionalProperties": true,
+      "type": "object",
+      "description": "Shows an array of Choice objects and make visible the Object linked to the selected value",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CardElement"
+        }
+      ],
+      "properties": {
+        "choices": {
+          "type": "array",
+          "description": "the choice options",
+          "items": {
+            "$ref": "#/definitions/Input.Choice"
+          }
+        },
+        "targetIds":{
+          "type": "object",
+          "description": "the list of element Ids inside this card to make visible or hidden {'choice value 1': 'targetId N', 'choice value N': 'targetId N'}",
+        },
+        "id": {
+          "type": "string",
+          "description": "Id for the value (will be used to identify collected input when SUBMIT is clicked)"
+        },
+        "isMultiSelect": {
+          "type": "boolean",
+          "description": "allow multiple choices to be selected",
+          "default": false
+        },
+        "style": {
+          "$ref": "#/definitions/ChoiceInputStyle"
+        },
+        "type": {
+          "description": "Must be Input.ChoiceInput",
+          "enum": [
+            "Input.ChoiceSet"
+          ],
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "description": "The initial choice (or set of choices) that should be selected. For multi-select, specifcy a comma-separated string of values"
+        }
+      },
+      "required": [
+        "id",
+        "choices", 
+        "targetIds"
       ]
     },
     "Input.Date": {

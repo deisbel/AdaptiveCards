@@ -856,7 +856,7 @@ interface INameValuePair {
     value: string;
 }
 
-class NameValuePairPropertyEditor extends PropertySheetEntry {
+export class NameValuePairPropertyEditor extends PropertySheetEntry {
     private collectionChanged(context: PropertySheetContext, nameValuePairs: INameValuePair[], refreshPropertySheet: boolean) {
         context.target[this.collectionPropertyName] = [];
 

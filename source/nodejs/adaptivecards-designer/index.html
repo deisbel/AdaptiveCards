@@ -3,7 +3,7 @@
 
 <head>
 	<title>Adaptive Cards Designer</title>
-	<script src="https://unpkg.com/adaptivecards@latest/dist/adaptivecards.min.js"></script>
+	<script src="adaptivecards.js"></script>
 	<script src="https://unpkg.com/adaptive-expressions@4/lib/browser.js"></script>
 	<script src="https://unpkg.com/adaptivecards-templating@latest/dist/adaptivecards-templating.min.js"></script>
 
@@ -20,65 +20,46 @@
 	</style>
 
 	<script src="adaptivecards-designer.js"></script>
+
 	<script type="text/javascript">
 		window.onload = function () {
-			ACDesigner.GlobalSettings.enableDataBindingSupport = false;
-			ACDesigner.GlobalSettings.showDataStructureTooklbox = false;
-			ACDesigner.GlobalSettings.showSampleDataEditorToolbox = false;
-			ACDesigner.GlobalSettings.showSampleHostDataEditorToolbox = false;
-			ACDesigner.GlobalSettings.showVersionPicker = false;
+			ACDesigner.GlobalSettings.enableDataBindingSupport = true;
+			ACDesigner.GlobalSettings.showDataStructureTooklbox = true;
+			ACDesigner.GlobalSettings.showSampleDataEditorToolbox = true;
+			ACDesigner.GlobalSettings.showSampleHostDataEditorToolbox = true;
+			ACDesigner.GlobalSettings.showVersionPicker = true;
+			ACDesigner.GlobalSettings.showTargetVersionMismatchWarning = false;
+			ACDesigner.GlobalSettings.selectedHostContainerControlsTargetVersion = true;
+			ACDesigner.GlobalSettings.showDataStructureToolbox = true;
 
 			if (!ACDesigner.SettingsManager.isLocalStorageAvailable) {
 				console.log("Local storage is not available.");
 			}
 
-
 			// Prepare a list of host containers
 			// This is not required. When no list is passed (empty array or null), the designer
 			// uses a default built-in host container, and the host container picker in the
 			// toolbar is hidden.
-			let hostContainers = ACDesigner.defaultMicrosoftHosts;
+			let hostContainers = ACDesigner.defaultMicrosoftHosts.filter(x => x.name.indexOf("Teams") != -1);
 
 			let designer = new ACDesigner.CardDesigner(hostContainers);
 
 			// Change where the designer looks for assets like CSS and container images
 			//designer.assetPath = "http://localhost:8080/";
 
-			/* Here's how to add buttons to the toolbar:
-
-			let myButton = new ACDesigner.ToolbarButton(
-				"myButton",
-				"My button",
-				null,
-				(sender) => { alert("My button was clicked"); });
-			myButton.separator = true;
-			designer.toolbar.insertElementAfter(myButton, ACDesigner.CardDesigner.ToolbarCommands.HostAppPicker);
-
-
 			// NOTE: Adding toolbar elements must be done BEFORE the designer is attached
+			// let myButton = new ACDesigner.ToolbarButton(
+			// 	"myButton",
+			// 	"My button",
+			// 	null,
+			// 	(sender) => { alert("My button was clicked"); });
+			// myButton.separator = true;
+			// designer.toolbar.insertElementAfter(myButton, ACDesigner.CardDesigner.ToolbarCommands.HostAppPicker);
 
+			//Here's how to collapse certain panes by default:
 
-			/* Here's how to collapse certain panes by default:
-
-			designer.treeViewPane.collapse();
-			designer.jsonEditorPane.collapse();
-			*/
-
-			/* Here's how to set the card payload in the designer:
-
-			designer.setCard(
-				{
-					type: "AdaptiveCard",
-					version: "1.0",
-					body: [
-						{
-							type: "TextBlock",
-							text: "Hello world"
-						}
-					]
-				}
-			);
-			*/
+			// designer.treeViewPane.collapse();
+			// designer.jsonEditorPane.collapse();
 
 			// NOTE: Collapsing panes/setting the card payload must be done AFTER the designer is attached
 			// Initialize monaco-editor for the JSON-editor pane.
@@ -88,15 +69,128 @@
 					'vs': 'https://unpkg.com/monaco-editor@0.17.1/min/vs'
 				}
 			});
+			
 			require(['vs/editor/editor.main'], function () {
 				designer.monacoModuleLoaded();
+
+				designer.sampleData = {
+					"title": "Publish Adaptive Card Schema",
+					"description": "Now that we have defined the main rules and features of the format, we need to produce a schema and publish it to GitHub. The schema will be the starting point of our reference documentation.",
+					"creator": {
+						"name": "Matt Hidinger",
+						"profileImage": "https://pbs.twimg.com/profile_images/3647943215/d7f12830b3c17a5a9e4afcc370e3a37e_400x400.jpeg"
+					},
+					"createdUtc": "2017-02-14T06:08:39Z",
+					"viewUrl": "https://adaptivecards.io", 
+					"activePartner": "Partner3"
+				};
+				
+				designer.setCard(
+					{
+						"type": "AdaptiveCard",
+						"body": [
+							{
+								"id": "label1",
+								"type": "TextBlock",
+								"size": "Medium",
+								"weight": "Bolder",
+								"text": "Trying ToggleVisibilityChoiceSet"
+								
+							},
+							{
+								"id": "customerResponse",
+								"type": "Input.ToggleVisibilityChoiceSet",
+								"choices": [
+									{
+										"title": "Customer has provided partner information",
+										"value": "Customer has provided partner information"
+									},
+									{
+										"title": "Customer services own pool",
+										"value": "Customer services own pool"
+									},
+									{
+										"title": "Customer is unsure",
+										"value": "Customer is unsure"
+									},
+									{
+										"title": "Customer declined to give information",
+										"value": "Customer declined to give information"
+									}
+								],
+								"targetIds": {
+									"Customer has provided partner information": "PartnerContactContainer",
+									"Customer services own pool": "SelfSupplierContainer"
+								},
+								"placeholder": "Select one",
+								"spacing": "Medium",
+								"isRequired": true,
+								"errorMessage": "Customer response is required",
+								"value": "Customer has provided partner information",
+								"label": "Customer Response"
+							},
+							{
+								"id": "PartnerContactContainer",
+                                "type": "Container",
+                                "items": [
+									{
+										"type": "TextBlock",
+										"text": "Container for option 1"
+									}	
+                                ],
+                                "isVisible": false
+                            },
+                            {
+                                "type": "Container",
+                                "items": [
+                                    {
+                                        "type": "Input.Text",
+                                        "placeholder": "If customer services own pool, enter their source of supplies",
+                                        "id": "selfServiceSource",
+                                        "value": "Test Value",
+                                        "spacing": "Medium",
+                                        "isMultiline": true,
+                                        "label": "Supply Source"
+                                    }
+                                ],
+                                "isVisible": false,
+                                "id": "SelfSupplierContainer"
+                            },
+							{
+								"id": "NormalChopice1",
+								"type": "Input.ChoiceSet",
+								"choices": [
+									{
+										"title": "Choice 1",
+										"value": "Choice 1"
+									},
+									{
+										"title": "Choice 2",
+										"value": "Choice 2"
+									}
+								],
+								"placeholder": "Placeholder text"
+							}
+						],
+						"actions": [
+							{
+								"id": "action1",
+								"type": "Action.OpenUrl",
+								"title": "View",
+								"url": "http://adaptivecards.io"
+							}
+						],
+						"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+						"version": "1.5"
+					}
+			);
 			});
 
 			designer.attachTo(document.getElementById("designerRootHost"));
 
 		};
 	</script>
-</head>
+<script defer src="adaptivecards-designer.js"></script><script defer src="adaptivecards-designer.js"></script></head>
 
 <body>
 	<div style="font-family: 'Segoe UI', sans-serif; font-size: 14px; display: flex; flex-direction: column; height: 100vh;">
